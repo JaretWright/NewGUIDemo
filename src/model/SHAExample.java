@@ -11,7 +11,7 @@ import java.security.SecureRandom;
  
 public class SHAExample {
      
-    public static void main(String[] args) throws NoSuchAlgorithmException {
+   /* public static void main(String[] args) throws NoSuchAlgorithmException {
         String passwordToHash = "password";
         byte[] salt = getSalt();
          
@@ -21,9 +21,9 @@ public class SHAExample {
             System.out.println(securePassword);
             System.out.printf("Length: %d%n%n", securePassword.length());    
         }
-    }
- 
-    private static String get_SHA_512_SecurePassword(String passwordToHash, byte[] salt)
+    }*/
+    
+    public static String get_SHA_512_SecurePassword(String passwordToHash, byte[] salt)
     {
         String generatedPassword = null;
         try {

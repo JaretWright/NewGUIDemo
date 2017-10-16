@@ -167,9 +167,9 @@ public class AllVolunteerViewController implements Initializable {
             // 4. Create people objects and add to the TableView
             while (resultSet.next())
             {
-                Person newPerson = new Person(resultSet.getInt(1),resultSet.getString(2), resultSet.getString(3),resultSet.getDate(4).toLocalDate());
+                Person newPerson = new Person(resultSet.getInt(1),resultSet.getString(2), resultSet.getString(3),resultSet.getString(4),resultSet.getDate(5).toLocalDate());
                                                 
-                newPerson.setImageFile(new File("./src/images/"+resultSet.getString(5)));
+                newPerson.setImageFile(new File("./src/images/"+resultSet.getString(6)));
                 volunteers.add(newPerson);
             }
             

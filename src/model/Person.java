@@ -33,7 +33,7 @@ import javafx.scene.image.WritablePixelFormat;
 public class Person {
     //instance variables to describe a person
     private int personID;
-    private String firstName, lastName, pwSalt;
+    private String firstName, lastName, userName, pwSalt;
     private LocalDate birthdate;
     private File imageFile;
 
@@ -44,9 +44,10 @@ public class Person {
      * @param birthdate LocalDate
      * @param imageFile File
      */
-    public Person(String firstName, String lastName, LocalDate birthdate, File imageFile) throws IOException, SQLException {
+    public Person(String firstName, String lastName, String userName, LocalDate birthdate, File imageFile) throws IOException, SQLException {
         setFirstName(firstName);
         setLastName(lastName);
+        setUserName(userName);
         setBirthdate(birthdate);
         setImageFile(imageFile);
         copyImageFile();
@@ -56,20 +57,30 @@ public class Person {
     /**
      * Default constructor, assumes the default image
      */
-    public Person(String firstName, String lastName, LocalDate birthdate) throws IOException, SQLException {
+    public Person(String firstName, String lastName, String userName, LocalDate birthdate) throws IOException, SQLException {
         setFirstName(firstName);
         setLastName(lastName);
+        setUserName(userName);
         setBirthdate(birthdate);
         setImageFile(new File("./src/images/defaultPerson.png"));
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     
     /**
      * Used to create an instance of Person where the personID is known
      */
-    public Person(int personID, String firstName, String lastName, LocalDate birthdate) {
+    public Person(int personID, String firstName, String userName, String lastName, LocalDate birthdate) {
         setPersonID(personID);
         setFirstName(firstName);
+        setUserName(userName);
         setLastName(lastName);
         setBirthdate(birthdate);
     }
@@ -85,8 +96,8 @@ public class Person {
      * @throws IOException
      * @throws SQLException 
      */
-    public Person(int personID, String firstName, String lastName, LocalDate birthdate, File imageFile) throws IOException, SQLException {
-        this(firstName, lastName, birthdate, imageFile);
+    public Person(int personID, String firstName, String lastName, String userName, LocalDate birthdate, File imageFile) throws IOException, SQLException {
+        this(firstName, lastName, userName, birthdate, imageFile);
         this.personID = personID;
     }
     
@@ -314,7 +325,7 @@ public class Person {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbcDemo", userName, password);
             
             //2.  create a string that holds query with ? for user inputs
-            String sql = "INSERT INTO people (firstName, lastName, birthday, photo) VALUES (?,?,?,?)";
+            String sql = "INSERT INTO people (firstName, lastName, userName, birthday, photo) VALUES (?,?,?,?,?)";
             
             //3. prepare the query
             preparedStatement = conn.prepareStatement(sql);
@@ -325,8 +336,9 @@ public class Person {
             //5.  bind values to the parameters
             preparedStatement.setString(1, firstName);
             preparedStatement.setString(2, lastName);
-            preparedStatement.setDate(3, bd);
-            preparedStatement.setString(4, imageFile.getName());
+            preparedStatement.setString(3, userName);
+            preparedStatement.setDate(4, bd);
+            preparedStatement.setString(5, imageFile.getName());
             
             preparedStatement.executeUpdate();
         } 
@@ -420,7 +432,7 @@ public class Person {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbcDemo", userName, password);
             
             //2.  create a string that holds query with ? for user inputs
-            String sql = "UPDATE people SET firstName = ?, lastName = ?, birthday = ?, photo  = ? WHERE personID = ?";
+            String sql = "UPDATE people SET firstName = ?, lastName = ?, userName = ?, birthday = ?, photo  = ? WHERE personID = ?";
                     
             //3. prepare the query
             preparedStatement = conn.prepareStatement(sql);
@@ -431,9 +443,10 @@ public class Person {
             //5.  bind values to the parameters
             preparedStatement.setString(1, firstName);
             preparedStatement.setString(2, lastName);
-            preparedStatement.setDate(3, bd);
-            preparedStatement.setString(4, imageFile.getName());
-            preparedStatement.setInt(5, personID);
+            preparedStatement.setString(3, this.userName);
+            preparedStatement.setDate(4, bd);
+            preparedStatement.setString(5, imageFile.getName());
+            preparedStatement.setInt(6, personID);
             
             preparedStatement.executeUpdate();
             preparedStatement.close();

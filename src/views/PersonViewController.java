@@ -44,6 +44,7 @@ public class PersonViewController implements Initializable {
     //FXML elements that interact with the Person class
     @FXML private TextField firstNameTextField;
     @FXML private TextField lastNameTextField;
+    @FXML private TextField userNameTextField;
     @FXML private DatePicker datePicker;
     @FXML private ImageView image;
     @FXML private Label errMsg;
@@ -148,7 +149,8 @@ public class PersonViewController implements Initializable {
         person = personSelected;
         firstNameTextField.setText(person.getFirstName());
         lastNameTextField.setText(person.getLastName());
-        datePicker.setValue(person.getBirthdate());  
+        userNameTextField.setText(person.getUserName());
+        datePicker.setValue(person.getBirthdate());    
         BufferedImage bufferedImage = ImageIO.read(person.getImageFile());
         Image img = SwingFXUtils.toFXImage(bufferedImage, null);
         image.setImage(img);
@@ -182,27 +184,30 @@ public class PersonViewController implements Initializable {
     public void saveButtonPushed(ActionEvent event) throws SQLException, IOException
     {
         try{
-            //check if the view is creating a new Person or updating an existing Person
+            //check if it is a new Person with a custom image
             if (person == null && imageChanged)
             {
                 person = new Person(firstNameTextField.getText(),
                                     lastNameTextField.getText(),
+                                    userNameTextField.getText(),
                                     datePicker.getValue(),
                                     imageFile
                                     );
                 person.insertIntoDB();
             }
-            else if (person == null)
+            else if (person == null)  //a new Person with the default image
             {
                 person = new Person(firstNameTextField.getText(),
                                     lastNameTextField.getText(),
+                                    userNameTextField.getText(),
                                     datePicker.getValue());
                 person.insertIntoDB();
             }
-            else
+            else    //editting an existing user
             {
                 person.setFirstName(firstNameTextField.getText());
                 person.setLastName(lastNameTextField.getText());
+                person.setUserName(userNameTextField.getText());
                 person.setBirthdate(datePicker.getValue());
                 person.updateDB();
             }
